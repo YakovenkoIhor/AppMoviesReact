@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import './styles.scss'
 
@@ -11,7 +11,7 @@ const {REACT_APP_API_KEY} = process.env;
 
 const HomeMuvies = () => {
 
-  const [movies, setMovies] = useState([])
+  // const [movies, setMovies] = useState([])
 
   const formik = useFormik({
       
@@ -52,14 +52,35 @@ const HomeMuvies = () => {
   const API = 'https://api.themoviedb.org/3/movie/';
   const generateUrl = `${API}popular?api_key=${REACT_APP_API_KEY}`
 
-  const creatFetch = (url) => {
-    fetch(url)
-    .then(res => res.json())
-    .then((result) => setMovies(result))
+  const useGetData = (url) => {
+    const [data, setData] = useState([])
+    const [error, setError] = useState(null)
+    const [loading, setLoading] = useState(false)
 
+    useEffect(() => {
+        setLoading(true)
+        fetch(url)
+            .then(res => res.json())
+            .then(setData)
+            .catch(setError)
+            .finally(() => setLoading(false))
+    })
+    return {
+        data,
+        error,
+        loading
+    }
   }
-  creatFetch(generateUrl)
+  const movies = useGetData(generateUrl)
   console.log(movies);
+  
+  // const creatFetch = (url) => {
+  //   fetch(url)
+  //   .then(res => res.json())
+  //   .then((result) => setMovies(result))
+
+  // }
+  
 
     return (
       <div
