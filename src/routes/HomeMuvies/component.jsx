@@ -58,29 +58,24 @@ const HomeMuvies = () => {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
-        setLoading(true)
+        // setLoading(true)
         fetch(url)
             .then(res => res.json())
             .then(setData)
-            .catch(setError)
-            .finally(() => setLoading(false))
-    })
+            // .catch(setError)
+            // .finally(() => setLoading(false))
+    },[])
     return {
         data,
-        error,
-        loading
+        // error,
+        // loading
     }
   }
   const movies = useGetData(generateUrl)
-  console.log(movies);
-  
-  // const creatFetch = (url) => {
-  //   fetch(url)
-  //   .then(res => res.json())
-  //   .then((result) => setMovies(result))
-
-  // }
-  
+  console.log( movies.data.results);
+  let tmp = movies.data.results
+  tmp.map(movie => console.log(movie))
+   
 
     return (
       <div
@@ -111,13 +106,14 @@ const HomeMuvies = () => {
 
         <div>
           Popular
-          {/* {movies.results.map(movie => {
+          {/* {movies.map(movie => {
         return (
           <span key={movie.id}>
             Title: {movie.title} <br />
           </span>
         )
-      })} */}
+      }
+      )} */}
       
         </div>
 
