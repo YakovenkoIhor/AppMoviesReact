@@ -6,12 +6,13 @@ import { useFormik } from 'formik';
 
 import * as Yup from 'yup';
 
-const {REACT_APP_API_KEY} = process.env;
+import {Link, useNavigate } from "react-router-dom"
 
+import {popularUrl} from '../../url/url'
+import useGetData from '../../hooks/useGetData'
 
-const HomeMuvies = () => {
-
-  // const [movies, setMovies] = useState([])
+const HomeMovies = () => {
+  const [res, setRes] = useState([])
 
   const formik = useFormik({
       
@@ -21,62 +22,27 @@ const HomeMuvies = () => {
 
     validationSchema: Yup.object({
       search: Yup.string()
-        .max(15, 'Must be 15 characters or less')
+        .min(3, 'Must be 3 characters or more')
         .required('Required'),
     }),
 
-    // onSubmit: values => {
-        
-    //   fetch('https://jsonplaceholder.typicode.com/posts', {
-    //     method: 'POST',
-    //     body: JSON.stringify({
-    //       title: values.title,
-    //       body: values.body,
-    //       userId: values.userId
-    //     }),
-    //     headers: {
-    //       'Content-type': 'application/json; charset=UTF-8',
-    //     },
-    //   })
-    //     .then((response) => response.json())
-    //     .then(post => {setPosts([...posts, post])}
-    //     );
-
-    //   formik.resetForm({
-    //     values: {body: ''},
-    //   });
-
-    // },
+    onSubmit: values => {
+      
+     setRes(values.search)
+    
+      formik.resetForm({
+        values: {search: ''},
+      });    
+      
+    },
+    
   });
 
-  const API = 'https://api.themoviedb.org/3/movie/';
-  const generateUrl = `${API}popular?api_key=${REACT_APP_API_KEY}`
+  let navigate = useNavigate();
+  const goSearch = () => {navigate(`/search/:${'spider'}`, { state: 'spider'})};
 
-  const useGetData = (url) => {
-    const [data, setData] = useState([])
-    const [error, setError] = useState(null)
-    const [loading, setLoading] = useState(false)
-
-    useEffect(() => {
-        // setLoading(true)
-        fetch(url)
-            .then(res => res.json())
-            .then(setData)
-            // .catch(setError)
-            // .finally(() => setLoading(false))
-    },[])
-    return {
-        data,
-        // error,
-        // loading
-    }
-  }
-  const movies = useGetData(generateUrl)
-  console.log( movies.data.results);
-  let tmp = movies.data.results
-  tmp.map(movie => console.log(movie))
+  const movies = useGetData(popularUrl)
    
-
     return (
       <div
       style={{
@@ -90,35 +56,44 @@ const HomeMuvies = () => {
         <form onSubmit={formik.handleSubmit} >
 
           <div>
-            <label htmlFor="body" >Body</label>
+            <label htmlFor="search" >Body</label>
             <input 
-              id="body"
-              name="body"
+              id="search"
+              name="search"
               type="text"
               onChange={formik.handleChange}
-              value={formik.values.title}
+              value={formik.values.search}
             />
           </div>
 
-          <button type="submit">Search</button>
-
+          <button type="submit" onClick={goSearch}  >Search</button>
+          {/* onClick={goSearch} */}
+            {/* <nav>
+              <Link to="/search"><button type="submit">Search</button></Link>
+            </nav> */}
+  
         </form>
 
+        {movies.data.length === 0
+        ? "Empty list"
+        : (
         <div>
           Popular
-          {/* {movies.map(movie => {
-        return (
-          <span key={movie.id}>
-            Title: {movie.title} <br />
-          </span>
-        )
-      }
-      )} */}
-      
-        </div>
-
+          
+          {movies.data.results.map(movie => {
+            return (
+              <span key={movie.id}>
+                  Title: {movie.title} <br />
+              </span>
+            )
+          }
+        )}
       </div>
+      )}
+      </div>
+
     );
   }
 
-  export default HomeMuvies
+  export default HomeMovies
+

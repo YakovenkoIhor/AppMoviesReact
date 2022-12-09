@@ -1,4 +1,4 @@
-import MainUsers from './pages/MainUsers'
+import MainMuvies from './pages/MainMovies'
 
 // import FormikForm from './forms/formikForm'
 
@@ -7,7 +7,7 @@ import './App.css';
 
 const App = () => (
   <div className="App">
-    <MainUsers/>
+    <MainMuvies/>
     {/* <FormikForm /> */}
   </div>
 );
