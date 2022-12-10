@@ -37,9 +37,9 @@ const HomeMovies = () => {
     },
     
   });
-
+  
   let navigate = useNavigate();
-  const goSearch = () => {navigate(`/search/:${'spider'}`, { state: 'spider'})};
+  const goSearch = () => {navigate(`/search/:${res}`, { state: res})};
 
   const movies = useGetData(popularUrl)
    
@@ -67,6 +67,7 @@ const HomeMovies = () => {
           </div>
 
           <button type="submit" onClick={goSearch}  >Search</button>
+
           {/* onClick={goSearch} */}
             {/* <nav>
               <Link to="/search"><button type="submit">Search</button></Link>

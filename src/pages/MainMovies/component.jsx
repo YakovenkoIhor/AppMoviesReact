@@ -13,7 +13,7 @@ const MainMuvies = () => {
 
         <Route path="/" element={<HomeMuvies />} />
         
-        <Route path="/search/:spider" element={<Search/>} />
+        <Route path="/search/:query" element={<Search/>} />
 
         {/* <Route path="users/:userId" element={<User/>} />
 
