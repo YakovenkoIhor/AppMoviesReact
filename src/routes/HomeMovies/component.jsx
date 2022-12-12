@@ -12,7 +12,6 @@ import {popularUrl} from '../../url/url'
 import useGetData from '../../hooks/useGetData'
 
 const HomeMovies = () => {
-  const [res, setRes] = useState([])
 
   const formik = useFormik({
       
@@ -26,23 +25,17 @@ const HomeMovies = () => {
         .required('Required'),
     }),
 
-    onSubmit: values => {
-      
-     setRes(values.search)
-    
+    onSubmit: values => {      
       formik.resetForm({
         values: {search: ''},
       });    
-      
-    },
-    
+    },    
   });
   
   let navigate = useNavigate();
-  const goSearch = () => {navigate(`/search/:${res}`, { state: res})};
 
   const movies = useGetData(popularUrl)
-   
+// console.log(movies.data.results);
     return (
       <div
       style={{
@@ -62,16 +55,16 @@ const HomeMovies = () => {
               name="search"
               type="text"
               onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
               value={formik.values.search}
             />
+            {formik.touched.search && formik.errors.search ? (
+        <div>{formik.errors.search}</div>
+      ) : null}
           </div>
 
-          <button type="submit" onClick={goSearch}  >Search</button>
-
-          {/* onClick={goSearch} */}
-            {/* <nav>
-              <Link to="/search"><button type="submit">Search</button></Link>
-            </nav> */}
+          <button type="submit" onClick={() => {navigate(`/search/:${formik.values.search}`);
+          }}>Search</button>
   
         </form>
 
@@ -83,9 +76,27 @@ const HomeMovies = () => {
           
           {movies.data.results.map(movie => {
             return (
-              <span key={movie.id}>
-                  Title: {movie.title} <br />
-              </span>
+            
+              
+              <div key={movie.id}>
+                  
+                  
+                  
+                  <nav>
+                    <Link to= {`/details/:${movie.id}`} >
+
+                      <img src={`https://image.tmdb.org/t/p/w200/${movie.poster_path}`} alt={`${movie.original_title}`}></img>
+
+                      <div className="title">{movie.title}</div>
+
+                      <div className="rate">{movie.vote_average*10+'%'}</div>
+
+                      <div className="date">{new Date(movie.release_date).toDateString()}</div>
+
+                    </Link>
+                  </nav>
+              </div> 
+              
             )
           }
         )}

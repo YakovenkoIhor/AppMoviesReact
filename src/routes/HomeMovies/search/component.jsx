@@ -1,15 +1,13 @@
-import {NavLink, useParams, useLocation } from "react-router-dom"
-import React, { useState, useEffect } from 'react';
+import {useParams, Link} from "react-router-dom"
 
 import useGetData from '../../../hooks/useGetData'
 import {searchUrl} from '../../../url/url'
 
 const Search = () => {
+  	
+const params = useParams()
 
-const { state } = useParams()
-console.log(useLocation().state);
-
-const movies = useGetData(searchUrl(useLocation().state))
+const movies = useGetData(searchUrl(params.query.slice(1)))
 
   return (
     <div style={{ background: "pink" }}>Result search
@@ -17,12 +15,14 @@ const movies = useGetData(searchUrl(useLocation().state))
         ? "Empty list"
         : (
         <div>
-          Popular
           
           {movies.data.results.map(movie => {
             return (
               <span key={movie.id}>
                   Title: {movie.title} <br />
+                  <nav>
+                    <Link to= {`/details/:${movie.id}`} ><button type="submit">Details</button></Link>
+                  </nav>
               </span>
             )
           }
