@@ -5,5 +5,6 @@ export const ADD_TODO = 'ADD_TODO';
 export const REMOVE_TODO = 'REMOVE_TODO';
 export const CHECK_TODO = 'CHECK_TODO';
 
-export const SET_SEARCH_MOVIES = 'SET_SEARCH_MOVIES';
 export const SET_POPULAR_MOVIES = 'SET_POPULAR_MOVIES';
+export const SET_SEARCH_MOVIES = 'SET_SEARCH_MOVIES';
+export const SET_DETAILS_MOVIES = 'SET_DETAILS_MOVIES';

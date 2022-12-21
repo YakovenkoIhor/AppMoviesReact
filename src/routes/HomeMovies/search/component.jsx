@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from 'react';
+
 import {useParams, Link} from "react-router-dom"
 import './styles.scss'
 
@@ -6,21 +8,31 @@ import {searchUrl} from '../../../url/url'
 
 import {connect} from "react-redux";
 // import {addTodo} from '../../store/todos/actions';
+import {setSearchMovies} from '../../../store/movies/actions';
+import {selectSearchMovies} from '../../../store/movies/selectors';
 
-const Search = () => {
+
+const Search = ({setSearchMovies, searchMovies}) => {
   	
 const params = useParams()
 
-const {data} = useGetData(searchUrl(params.query.slice(1)))
-// console.log(data.length);
+// const {data} = useGetData(searchUrl(params.query.slice(1)))
+
+useEffect(()=>{
+  fetch(searchUrl(params.query.slice(1)))
+  .then(res => res.json())
+  // .then(data => console.log(data.results))
+  .then(data => setSearchMovies(data.results))
+})
+
   return (
     <div style={{ background: "pink" }}>Result search
-      {data.length === 0
+      {!searchMovies
         ? "Empty list"
         : (
         <div className='movies'>
           
-          {data.results.map(movie => {
+          {searchMovies.map(movie => {
             return (
               <div key={movie.id} className='movie'>
                                                       
@@ -47,12 +59,14 @@ const {data} = useGetData(searchUrl(params.query.slice(1)))
   );
 }
 
-  export default Search;
+  // export default Search;
 
-  // const mapStateToProps = state => ({
-  //   todos: state.todos,
-  // })
-  // const mapDispatchToProps = {
-  //   addTodo
-  // }
-  // export default connect(null, mapDispatchToProps)(Search);
+  const mapStateToProps = state => ({
+    // movies: selectPopularMovies(state),
+    searchMovies: selectSearchMovies(state),
+  })
+  const mapDispatchToProps = {
+    setSearchMovies,
+    // setPopularMovies
+  }
+  export default connect(mapStateToProps, mapDispatchToProps)(Search);

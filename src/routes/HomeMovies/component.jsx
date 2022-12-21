@@ -14,7 +14,7 @@ import useGetData from '../../hooks/useGetData'
 import {connect} from "react-redux";
 import {setSearchMovies} from '../../store/movies/actions';
 import {setPopularMovies} from '../../store/movies/actions';
-import {selectSearchMovies} from '../../store/movies/selectors';
+// import {selectSearchMovies} from '../../store/movies/selectors';
 import {selectPopularMovies} from '../../store/movies/selectors';
 
 
@@ -33,7 +33,7 @@ const HomeMovies = ({searchMovies, setSearchMovies, setPopularMovies, movies}) =
     }),
 
     onSubmit: values => {  
-      setSearchMovies(formik.values.search)
+      // setSearchMovies(formik.values.search)
       navigate(`/search/:${formik.values.search}`);
              
       formik.resetForm({
@@ -49,9 +49,10 @@ const HomeMovies = ({searchMovies, setSearchMovies, setPopularMovies, movies}) =
   useEffect(()=>{
     fetch(popularUrl)
     .then(res => res.json())
-    .then(data => setPopularMovies(data))
+    // .then(data => console.log(data.results))
+    .then(data => setPopularMovies(data.results))
   })
-// console.log();
+// console.log(data.results);
     return (
       <div
       style={{
@@ -82,7 +83,7 @@ const HomeMovies = ({searchMovies, setSearchMovies, setPopularMovies, movies}) =
           <button type="submit">Search</button>
         </form>
 
-        {setPopularMovies.data === 0
+        {!movies
         ? "Empty list"
         : (
         <>
@@ -125,10 +126,10 @@ const HomeMovies = ({searchMovies, setSearchMovies, setPopularMovies, movies}) =
 
  const mapStateToProps = state => ({
     movies: selectPopularMovies(state),
-    searchMovies: selectSearchMovies(state),
+    // searchMovies: selectSearchMovies(state),
   })
   const mapDispatchToProps = {
-    setSearchMovies,
+    // setSearchMovies,
     setPopularMovies
   }
   export default connect(mapStateToProps, mapDispatchToProps)(HomeMovies);

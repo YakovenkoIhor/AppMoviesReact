@@ -1,4 +1,4 @@
-import {SET_POSTS, REMOVE_POST, SET_SEARCH_MOVIES, SET_POPULAR_MOVIES} from './types';
+import {SET_POSTS, REMOVE_POST, SET_POPULAR_MOVIES, SET_SEARCH_MOVIES, SET_DETAILS_MOVIES} from './types';
 
 const initialState = {
   popular: [],
@@ -9,15 +9,20 @@ const initialState = {
 export const movies = (state = initialState, action) => {
   switch (action.type) {
 
+    case SET_POPULAR_MOVIES :     
+    return {
+      ...state,
+      popular: action.payload
+    };
     case SET_SEARCH_MOVIES :     
     return {
       ...state,
       search: action.payload
     };
-    case SET_POPULAR_MOVIES :     
+    case SET_DETAILS_MOVIES :     
     return {
       ...state,
-      popular: action.payload
+      details: action.payload
     };
           
     default:
