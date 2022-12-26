@@ -1,23 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
-const useGetData = (url, userId) => {
-    const [data, setData] = useState([])
-    // const [error, setError] = useState(null)
-    // const [loading, setLoading] = useState(false)
-
-    useEffect(() => {
-        // setLoading(true)
-        fetch(url)
-            .then(res => res.json())
-            .then(setData)
-            // .catch(setError)
-            // .finally(() => setLoading(false))
-    }, [userId])
-    return {
-        data,
-        // error,
-        // loading
-    }
+const useGetData = (url, set) => {
+    useEffect(()=>{
+    fetch(url)
+    .then(res => res.json())
+    .then(data => set(data))
+  },[])
 }
 
 export default useGetData

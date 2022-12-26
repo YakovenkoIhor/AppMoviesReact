@@ -1,4 +1,4 @@
-import {SET_POSTS, REMOVE_POST, SET_POPULAR_MOVIES, SET_SEARCH_MOVIES, SET_DETAILS_MOVIES} from './types';
+import {SET_POPULAR_MOVIES, SET_SEARCH_MOVIES, SET_DETAILS_MOVIES} from './types';
 
 const initialState = {
   popular: [],
@@ -30,17 +30,3 @@ export const movies = (state = initialState, action) => {
       
   } 
 }
-
-
-export const posts = (state = initialState, action) => {
-  switch (action.type) {
-    case SET_POSTS:
-      return [...new Set(action.posts)];
-    case REMOVE_POST:
-      console.log(action, state, 'reducer')
-      return state.filter(post => post.id !== action.postId);
-    default:
-      return state;
-  }
-}
- 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 import './styles.scss'
 
@@ -12,13 +12,14 @@ import {popularUrl} from '../../url/url'
 import useGetData from '../../hooks/useGetData'
 
 import {connect} from "react-redux";
-import {setSearchMovies} from '../../store/movies/actions';
 import {setPopularMovies} from '../../store/movies/actions';
-// import {selectSearchMovies} from '../../store/movies/selectors';
 import {selectPopularMovies} from '../../store/movies/selectors';
 
+import RateAntd from '../../components/AntDesign/Rate';
+import ButtonSearchAntd from '../../components/AntDesign/ButtonSearch';
+import CardAntd from '../../components/AntDesign/Card';
 
-const HomeMovies = ({searchMovies, setSearchMovies, setPopularMovies, movies}) => {
+const HomeMovies = ({movies, setPopularMovies}) => {
 
   const formik = useFormik({
       
@@ -33,40 +34,33 @@ const HomeMovies = ({searchMovies, setSearchMovies, setPopularMovies, movies}) =
     }),
 
     onSubmit: values => {  
-      // setSearchMovies(formik.values.search)
       navigate(`/search/:${formik.values.search}`);
              
-      formik.resetForm({
-        values: {search: ''},
-      });    
+      formik.resetForm();    
     },    
   });
   
   let navigate = useNavigate();
 
-  // const movies = useGetData(popularUrl)
-
-  useEffect(()=>{
-    fetch(popularUrl)
-    .then(res => res.json())
-    // .then(data => console.log(data.results))
-    .then(data => setPopularMovies(data.results))
-  })
-// console.log(data.results);
+  useGetData(popularUrl, setPopularMovies)
+  
     return (
-      <div
-      style={{
-        background: "pink"
-       }}
-      >
-        <h1>Movies</h1>
-
-        <p>Movies information</p>
-
+      <div>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-around',
+            alignItems: 'center',
+            flexDirection: 'row'
+         }}>
+          <div>
+            <h1>Movies</h1>
+            <p>Movie search and description</p>
+          </div>
+        
         <form onSubmit={formik.handleSubmit} >
 
           <div>
-            <label htmlFor="search" >Body</label>
             <input 
               id="search"
               name="search"
@@ -75,42 +69,46 @@ const HomeMovies = ({searchMovies, setSearchMovies, setPopularMovies, movies}) =
               onBlur={formik.handleBlur}
               value={formik.values.search}
             />
+
             {formik.touched.search && formik.errors.search ? (
-        <div>{formik.errors.search}</div>
-      ) : null}
+            <div>{formik.errors.search}</div>
+            ) : null}
           </div>
 
-          <button type="submit">Search</button>
+          <button type="submit" className='buttonSearch'><ButtonSearchAntd/></button>
         </form>
 
-        {!movies
-        ? "Empty list"
-        : (
+        </div>
+        {!movies.results ? "Empty list": (
+
         <>
-        <div className='popular'>Popular</div>
+        <div className='popular'>Popular movies</div>
 
         <div className='movies'>
           
-          {movies.map(movie => {
+          {movies.results.map(movie => {
+
             return (
-                          
+
               <div key={movie.id} className='movie'>
                                                       
                 <nav>
+
                   <Link to= {`/details/:${movie.id}`} >
-
-                    <img src={`https://image.tmdb.org/t/p/w200/${movie.poster_path}`} alt={`${movie.original_title}`}></img>
-
-                    <div className="title">{movie.title}</div>
-
-                    <div className="rate">{movie.vote_average*10+'%'}</div>
-
-                    <div className="date">{new Date(movie.release_date).toDateString()}</div>
-
+                    
+                    <CardAntd
+                      src={movie.poster_path} 
+                      alt={`${movie.original_title}`}
+                      title={movie.title}
+                      date={new Date(movie.release_date).toDateString()}
+                    >
+                      <RateAntd
+                        rate = {movie.vote_average}
+                        />
+                    </CardAntd>                  
                   </Link>
                 </nav>
               </div> 
-              
             )
           }
         )}
@@ -122,14 +120,10 @@ const HomeMovies = ({searchMovies, setSearchMovies, setPopularMovies, movies}) =
     );
   }
 
-  // export default HomeMovies
-
  const mapStateToProps = state => ({
-    movies: selectPopularMovies(state),
-    // searchMovies: selectSearchMovies(state),
+    movies: selectPopularMovies(state)
   })
   const mapDispatchToProps = {
-    // setSearchMovies,
     setPopularMovies
   }
   export default connect(mapStateToProps, mapDispatchToProps)(HomeMovies);

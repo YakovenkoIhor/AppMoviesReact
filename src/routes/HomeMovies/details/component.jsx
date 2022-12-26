@@ -1,49 +1,49 @@
-import {NavLink, useParams, useLocation } from "react-router-dom"
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import {useParams} from "react-router-dom"
 import {Link} from "react-router-dom"
 
 import useGetData from '../../../hooks/useGetData'
 import {detailsUrl} from '../../../url/url'
 
-
 import {connect} from "react-redux";
 import {setDetailsMovies} from '../../../store/movies/actions';
 import {selectDetailsMovies} from '../../../store/movies/selectors';
 
+import ButtonHomeAntd from '../../../components/AntDesign/ButtonHome';
+import CardDetails from '../../../components/AntDesign/CardDetails';
+import RateAntd from '../../../components/AntDesign/Rate';
 
 
 const Details = ({detailsMovies, setDetailsMovies}) => {
 
 const params = useParams()
-useEffect(()=>{
-  fetch(detailsUrl(params.movieId.slice(1)))
-  .then(res => res.json())
-  // .then(data => console.log(data))
-  .then(data => setDetailsMovies(data))
-})
-// const movie = useGetData(detailsUrl(params.movieId.slice(1)))
-// console.log(movie.data);
+useGetData(detailsUrl(params.movieId.slice(1)), setDetailsMovies)
+
   return (
-    <div style={{ background: "pink" }}>Movie<br/>
+    <div style={{
+          fontSize: 50,
+          fontWeight: 700
+       }}>Movie
 
-      <img src={`https://image.tmdb.org/t/p/w500/${detailsMovies.backdrop_path}`} alt={`${detailsMovies.original_title}`}></img>
-
-      <div className="title">{detailsMovies.title}</div>
-
-      <div className="rate">{Math.round(detailsMovies.vote_average*10)+'%'}</div>
-
-      <div className="date">{new Date(detailsMovies.release_date).toDateString()}</div>
-
-      <div className="description">{detailsMovies.overview}</div>
+      <CardDetails
+        src={detailsMovies.backdrop_path} 
+        alt={detailsMovies.original_title}
+        title={detailsMovies.title}
+        date={new Date(detailsMovies.release_date).toDateString()}
+        description={detailsMovies.overview}
+      >
+        <RateAntd
+        rate = {detailsMovies.vote_average}
+        />
+      </CardDetails>
 
       <nav>
-        <Link to= '/' ><button type="submit">Home</button></Link>
+        <Link to= '/' ><ButtonHomeAntd/></Link>
       </nav>
     </div>
   );
 }
 
-// export default Details;
 const mapStateToProps = state => ({
   detailsMovies: selectDetailsMovies(state),
 })
